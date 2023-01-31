@@ -20,3 +20,9 @@ user-config:
   username: user
   password: user
   roles: USER
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.htm
