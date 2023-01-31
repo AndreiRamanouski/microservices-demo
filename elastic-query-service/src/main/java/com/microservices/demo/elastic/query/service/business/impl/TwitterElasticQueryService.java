@@ -18,7 +18,8 @@ public class TwitterElasticQueryService implements ElasticQueryService {
     private final ElasticQueryServiceResponseModelAssembler elasticQueryServiceResponseModelAssembler;
     private final ElasticQueryClient<TwitterIndexModel> elasticQueryClient;
 
-    public TwitterElasticQueryService(ElasticQueryServiceResponseModelAssembler elasticQueryServiceResponseModelAssembler,
+    public TwitterElasticQueryService(
+            ElasticQueryServiceResponseModelAssembler elasticQueryServiceResponseModelAssembler,
             ElasticQueryClient<TwitterIndexModel> elasticQueryClient) {
         this.elasticQueryServiceResponseModelAssembler = elasticQueryServiceResponseModelAssembler;
         //        this.elasticToResponseModelTransformer = elasticToResponseModelTransformer;
@@ -35,7 +36,8 @@ public class TwitterElasticQueryService implements ElasticQueryService {
     @Override
     public List<ElasticQueryServiceResponseModel> getDocumentByText(String text) {
         log.info("getDocumentByText");
-        //        return elasticToResponseModelTransformer.getResponseModels(elasticQueryClient.getIndexModelById(text));
+        //        return elasticToResponseModelTransformer
+        //        .getResponseModels(elasticQueryClient.getIndexModelById(text));
         return elasticQueryServiceResponseModelAssembler.toModels(elasticQueryClient.getIndexModelById(text));
     }
 

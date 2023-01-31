@@ -3,6 +3,7 @@ package com.microservices.demo.elastic.query.service.api;
 import com.microservices.demo.elastic.query.service.business.ElasticQueryService;
 import com.microservices.demo.elastic.query.service.model.ElasticQueryServiceRequestModel;
 import com.microservices.demo.elastic.query.service.model.ElasticQueryServiceResponseModel;
+import com.microservices.demo.elastic.query.service.model.ElasticQueryServiceResponseModelV2;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import org.slf4j.Logger;
@@ -22,7 +23,7 @@ public class ElasticDocumentController {
         this.elasticQueryService = elasticQueryService;
     }
 
-    @GetMapping("/")
+    @GetMapping("/v1")
     public @ResponseBody
     ResponseEntity<List<ElasticQueryServiceResponseModel>> getAllDocuments() {
         List<ElasticQueryServiceResponseModel> response = elasticQueryService.getAllDocument();
@@ -30,7 +31,7 @@ public class ElasticDocumentController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/v1/{id}")
     public @ResponseBody
     ResponseEntity<ElasticQueryServiceResponseModel>
     getDocumentById(@PathVariable @NotEmpty String id) {
@@ -40,7 +41,18 @@ public class ElasticDocumentController {
         return ResponseEntity.ok(elasticQueryServiceResponseModel);
     }
 
-    @PostMapping("/get-document-by-text")
+    @GetMapping("/v2/{id}")
+    public @ResponseBody
+    ResponseEntity<ElasticQueryServiceResponseModelV2>
+    getDocumentByIdV2(@PathVariable @NotEmpty String id) {
+        ElasticQueryServiceResponseModel elasticQueryServiceResponseModel =
+                elasticQueryService.getDocumentById(id);
+        ElasticQueryServiceResponseModelV2 v2Model = getV2Model(elasticQueryServiceResponseModel);
+        LOG.debug("Elasticsearch returned document with id {}", id);
+        return ResponseEntity.ok(v2Model);
+    }
+
+    @PostMapping("/v1/get-document-by-text")
     public @ResponseBody
     ResponseEntity<List<ElasticQueryServiceResponseModel>>
     getDocumentByText(@RequestBody @Valid ElasticQueryServiceRequestModel elasticQueryServiceRequestModel) {
@@ -50,5 +62,15 @@ public class ElasticDocumentController {
         return ResponseEntity.ok(response);
     }
 
+    private ElasticQueryServiceResponseModelV2 getV2Model(ElasticQueryServiceResponseModel elasticQueryServiceResponseModel){
+        ElasticQueryServiceResponseModelV2 build = ElasticQueryServiceResponseModelV2.builder()
+                .id(Long.parseLong(elasticQueryServiceResponseModel.getId()))
+                .userId(elasticQueryServiceResponseModel.getUserId())
+                .text(elasticQueryServiceResponseModel.getText())
+                .createdAt(elasticQueryServiceResponseModel.getCreatedAt())
+                .build();
+        build.add(elasticQueryServiceResponseModel.getLinks());
+        return build;
+    }
 
 }
