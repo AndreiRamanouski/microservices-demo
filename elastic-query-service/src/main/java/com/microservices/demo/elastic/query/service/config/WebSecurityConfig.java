@@ -22,28 +22,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http
-                .httpBasic()
-                .and()
-                .authorizeRequests()
-//                .antMatchers("/**").hasRole("USER")
-                .antMatchers("/**").permitAll()
-                .and()
-                .csrf().disable();
-
 //        http
+//                .httpBasic()
+//                .and()
 //                .authorizeRequests()
-//                .antMatchers("/**").permitAll().and()
+////                .antMatchers("/**").hasRole("USER")
+//                .antMatchers("/**").permitAll()
+//                .and()
 //                .csrf().disable();
+
+        http
+                .authorizeRequests()
+                .antMatchers("/**").permitAll().and()
+                .csrf().disable();
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser(userConfigData.getUsername())
-                .password(passwordEncoder().encode(userConfigData.getPassword()))
-                .roles(userConfigData.getRoles());
-    }
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.inMemoryAuthentication()
+//                .withUser(userConfigData.getUsername())
+//                .password(passwordEncoder().encode(userConfigData.getPassword()))
+//                .roles(userConfigData.getRoles());
+//    }
 
 //    @Override
 //    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -53,10 +53,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .roles("USER");
 //    }
 //
-    @Bean
-    protected PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+//    @Bean
+//    protected PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
 
 
 }
