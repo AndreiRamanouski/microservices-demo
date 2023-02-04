@@ -1,7 +1,7 @@
 package com.microservices.demo.web.client.api;
 
-import com.microservices.demo.web.client.model.ElasticQueryWebClientRequestModel;
-import com.microservices.demo.web.client.model.ElasticQueryWebClientResponseModel;
+import com.microservices.demo.elastic.query.web.client.common.model.ElasticQueryWebClientRequestModel;
+import com.microservices.demo.elastic.query.web.client.common.model.ElasticQueryWebClientResponseModel;
 import com.microservices.demo.web.client.service.ElasticWebClientInterface;
 import java.util.List;
 import javax.validation.Valid;

@@ -13,6 +13,7 @@ public class ElasticQueryWebClientConfigData {
     private Query queryByText;
 
     @Data
+    @ConfigurationProperties(prefix = "elastic-query-web-client.webclient")
     public static class WebClient {
         private Integer connectTimeoutMs;
         private Integer readTimeoutMs;
