@@ -1,5 +1,6 @@
 package com.microservices.demo.elastic.query.service.model;
 
+import com.microservices.demo.elastic.query.common.model.ElasticQueryServiceResponseModel;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
