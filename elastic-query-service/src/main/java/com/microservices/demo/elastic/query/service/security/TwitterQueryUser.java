@@ -1,5 +1,6 @@
 package com.microservices.demo.elastic.query.service.security;
 
+import java.util.Map;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,6 +18,7 @@ public class TwitterQueryUser implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
+    private Map<String, PermissionType> permissions;
     public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
         this.authorities = authorities;
     }
