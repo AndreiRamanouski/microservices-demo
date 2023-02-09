@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@EnableConfigurationProperties({ElasticQueryServiceConfigData.class, UserConfigData.class})
+@EnableConfigurationProperties({UserConfigData.class})
 @ComponentScan(basePackages = "com.microservices.demo")
 public class ElasticQueryServiceApplication {
 
