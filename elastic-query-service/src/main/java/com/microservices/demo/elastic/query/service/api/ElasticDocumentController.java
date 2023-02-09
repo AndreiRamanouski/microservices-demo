@@ -66,21 +66,7 @@ public class ElasticDocumentController {
         return ResponseEntity.ok(elasticQueryServiceResponseModel);
     }
 
-    @Operation(summary = "Get document by id v2.")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successful response.", content = {
-            @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ElasticQueryServiceResponseModel.class))}),
-            @ApiResponse(responseCode = "400", description = "Not Found."),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error.")})
-    @GetMapping("/v2/{id}")
-    public @ResponseBody ResponseEntity<ElasticQueryServiceResponseModelV2> getDocumentByIdV2(
-            @PathVariable @NotEmpty String id) {
-        ElasticQueryServiceResponseModel elasticQueryServiceResponseModel = elasticQueryService.getDocumentById(id);
-        ElasticQueryServiceResponseModelV2 v2Model = getV2Model(elasticQueryServiceResponseModel);
-        LOG.debug("Elasticsearch returned document with id {}", id);
-        return ResponseEntity.ok(v2Model);
-    }
-
+    //todo works with app_super_user
     @PreAuthorize("hasRole('APP_USER_ROLE') || hasRole('APP_SUPER_USER_ROLE') || hasAnyAuthority('SCOPE_APP_USER_ROLE')")
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     @Operation(summary = "Get document by text.")
@@ -96,6 +82,22 @@ public class ElasticDocumentController {
                 elasticQueryServiceRequestModel.getText());
         LOG.info("Elasticsearch returned {} of documents", response.size());
         return ResponseEntity.ok(response);
+    }
+
+
+    @Operation(summary = "Get document by id v2.")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successful response.", content = {
+            @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ElasticQueryServiceResponseModel.class))}),
+            @ApiResponse(responseCode = "400", description = "Not Found."),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error.")})
+    @GetMapping("/v2/{id}")
+    public @ResponseBody ResponseEntity<ElasticQueryServiceResponseModelV2> getDocumentByIdV2(
+            @PathVariable @NotEmpty String id) {
+        ElasticQueryServiceResponseModel elasticQueryServiceResponseModel = elasticQueryService.getDocumentById(id);
+        ElasticQueryServiceResponseModelV2 v2Model = getV2Model(elasticQueryServiceResponseModel);
+        LOG.debug("Elasticsearch returned document with id {}", id);
+        return ResponseEntity.ok(v2Model);
     }
 
     private ElasticQueryServiceResponseModelV2 getV2Model(
