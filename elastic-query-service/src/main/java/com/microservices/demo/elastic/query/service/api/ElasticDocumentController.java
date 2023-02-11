@@ -3,7 +3,9 @@ package com.microservices.demo.elastic.query.service.api;
 import com.microservices.demo.elastic.query.common.model.ElasticQueryServiceRequestModel;
 import com.microservices.demo.elastic.query.common.model.ElasticQueryServiceResponseModel;
 import com.microservices.demo.elastic.query.service.business.ElasticQueryService;
+import com.microservices.demo.elastic.query.service.model.ElasticQueryServiceAnalyticsResponseModel;
 import com.microservices.demo.elastic.query.service.model.ElasticQueryServiceResponseModelV2;
+import com.microservices.demo.elastic.query.service.security.TwitterQueryUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,11 +14,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,9 +34,9 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize("isAuthenticated()")
 @RestController
 @RequestMapping(value = "/documents")
+@Slf4j
 public class ElasticDocumentController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ElasticDocumentController.class);
     private final ElasticQueryService elasticQueryService;
 
     public ElasticDocumentController(ElasticQueryService elasticQueryService) {
@@ -47,7 +53,7 @@ public class ElasticDocumentController {
     @GetMapping("/v1")
     public @ResponseBody ResponseEntity<List<ElasticQueryServiceResponseModel>> getAllDocuments() {
         List<ElasticQueryServiceResponseModel> response = elasticQueryService.getAllDocument();
-        LOG.info("Elasticsearch returned {} of documents", response.size());
+        log.info("Elasticsearch returned {} of documents", response.size());
         return ResponseEntity.ok(response);
     }
 
@@ -62,7 +68,7 @@ public class ElasticDocumentController {
     public @ResponseBody ResponseEntity<ElasticQueryServiceResponseModel> getDocumentById(
             @PathVariable @NotEmpty String id) {
         ElasticQueryServiceResponseModel elasticQueryServiceResponseModel = elasticQueryService.getDocumentById(id);
-        LOG.debug("Elasticsearch returned document with id {}", id);
+        log.debug("Elasticsearch returned document with id {}", id);
         return ResponseEntity.ok(elasticQueryServiceResponseModel);
     }
 
@@ -76,11 +82,17 @@ public class ElasticDocumentController {
             @ApiResponse(responseCode = "400", description = "Not Found."),
             @ApiResponse(responseCode = "500", description = "Internal Server Error.")})
     @PostMapping("/v1/get-document-by-text")
-    public @ResponseBody ResponseEntity<List<ElasticQueryServiceResponseModel>> getDocumentByText(
-            @RequestBody @Valid ElasticQueryServiceRequestModel elasticQueryServiceRequestModel) {
-        List<ElasticQueryServiceResponseModel> response = elasticQueryService.getDocumentByText(
-                elasticQueryServiceRequestModel.getText());
-        LOG.info("Elasticsearch returned {} of documents", response.size());
+    public @ResponseBody ResponseEntity<ElasticQueryServiceAnalyticsResponseModel> getDocumentByText(
+            @RequestBody @Valid ElasticQueryServiceRequestModel elasticQueryServiceRequestModel,
+            @AuthenticationPrincipal TwitterQueryUser principal,
+            @RegisteredOAuth2AuthorizedClient("keycloak")OAuth2AuthorizedClient oAuth2AuthorizedClient) {
+        log.info("getDocumentByText");
+        log.info("principal username {}", principal.getUsername());
+
+        ElasticQueryServiceAnalyticsResponseModel response = elasticQueryService.getDocumentByText(
+                elasticQueryServiceRequestModel.getText(), oAuth2AuthorizedClient.getAccessToken().toString());
+        log.info("Elasticsearch returned {} of documents", response.getQueryServiceResponseModels().size());
+        log.info("Elasticsearch returned word count {}", response.getWordCount());
         return ResponseEntity.ok(response);
     }
 
@@ -96,7 +108,7 @@ public class ElasticDocumentController {
             @PathVariable @NotEmpty String id) {
         ElasticQueryServiceResponseModel elasticQueryServiceResponseModel = elasticQueryService.getDocumentById(id);
         ElasticQueryServiceResponseModelV2 v2Model = getV2Model(elasticQueryServiceResponseModel);
-        LOG.debug("Elasticsearch returned document with id {}", id);
+        log.debug("Elasticsearch returned document with id {}", id);
         return ResponseEntity.ok(v2Model);
     }
 

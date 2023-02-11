@@ -1,5 +1,6 @@
 package com.microservices.demo.web.client.api;
 
+import com.microservices.demo.elastic.query.web.client.common.model.ElasticQueryServiceAnalyticsResponseModel;
 import com.microservices.demo.elastic.query.web.client.common.model.ElasticQueryWebClientRequestModel;
 import com.microservices.demo.elastic.query.web.client.common.model.ElasticQueryWebClientResponseModel;
 import com.microservices.demo.web.client.service.ElasticWebClientInterface;
@@ -44,12 +45,13 @@ public class QueryController {
     public String queryByText(@Valid ElasticQueryWebClientRequestModel requestModel,
             Model model) {
         LOG.info("Querying with text {}", requestModel.getText());
-        List<ElasticQueryWebClientResponseModel> responseModels = elasticWebClientService.getDataByText(requestModel);
+        ElasticQueryServiceAnalyticsResponseModel responseModel = elasticWebClientService.getDataByText(requestModel);
         //        responseModels.add(ElasticQueryWebClientResponseModel.builder()
         //                .id("1")
         //                .text(requestModel.getText())
         //                .build());
-        model.addAttribute("elasticQueryWebClientResponseModels", responseModels);
+        model.addAttribute("elasticQueryWebClientResponseModels", responseModel.getQueryServiceResponseModels());
+        model.addAttribute("wordCount", responseModel.getWordCount());
         model.addAttribute("searchText", requestModel.getText());
         model.addAttribute("elasticQueryWebClientRequestModel",
                 ElasticQueryWebClientRequestModel.builder().build());

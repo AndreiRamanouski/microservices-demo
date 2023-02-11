@@ -6,7 +6,6 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "com.microservices.demo")
-//@EnableConfigurationProperties({ElasticQueryWebClientConfigData.class})
 public class ElasticQueryWebClientApplication {
 
     public static void main(String[] args) {

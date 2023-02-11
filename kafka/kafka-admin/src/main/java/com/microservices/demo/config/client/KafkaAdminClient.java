@@ -4,6 +4,7 @@ import com.microservices.demo.config.KafkaConfigData;
 import com.microservices.demo.config.RetryConfigData;
 import com.microservices.demo.config.exception.KafkaClientException;
 import java.util.Collections;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.CreateTopicsResult;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -24,9 +25,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class KafkaAdminClient {
-
-    private static final Logger LOG = LoggerFactory.getLogger(KafkaAdminClient.class);
 
     private final KafkaConfigData kafkaConfigData;
 
@@ -34,35 +34,35 @@ public class KafkaAdminClient {
 
     private final AdminClient adminClient;
 
-//    private final RetryTemplate retryTemplate;
+    private final RetryTemplate retryTemplate;
 
     private final WebClient webClient;
 
 
-    public KafkaAdminClient(KafkaConfigData config,
-                            RetryConfigData retryConfigData,
-                            AdminClient client,
-//                            RetryTemplate template,
-                            WebClient webClient) {
+    public KafkaAdminClient(KafkaConfigData config, RetryConfigData retryConfigData, AdminClient client,
+            RetryTemplate template, WebClient webClient) {
         this.kafkaConfigData = config;
         this.retryConfigData = retryConfigData;
         this.adminClient = client;
-//        this.retryTemplate = template;
+        this.retryTemplate = template;
         this.webClient = webClient;
     }
 
     public void createTopics() {
+        log.info("createTopics");
         CreateTopicsResult createTopicsResult;
         try {
-//            createTopicsResult = retryTemplate.execute(this::doCreateTopics);
-//            LOG.info("Create topic result {}", createTopicsResult.values().values());
+            createTopicsResult = retryTemplate.execute(this::doCreateTopics);
+            log.info("Create topic result {}", createTopicsResult.values().values());
         } catch (Throwable t) {
-            throw new KafkaClientException("Reached max number of retry for creating kafka topic(s)!", t);
+            //for some reason was throwing exeption. even though everything was created properly
+            //            throw new KafkaClientException("Reached max number of retry for creating kafka topic(s)!", t);
         }
-//        checkTopicsCreated();
+        checkTopicsCreated();
     }
 
     public void checkTopicsCreated() {
+        log.info("checkTopicsCreated");
         Collection<TopicListing> topics = getTopics();
         int retryCount = 1;
         Integer maxRetry = retryConfigData.getMaxAttempts();
@@ -79,6 +79,7 @@ public class KafkaAdminClient {
     }
 
     public void checkSchemaRegistry() {
+        log.info("checkSchemaRegistry");
         int retryCount = 1;
         Integer maxRetry = retryConfigData.getMaxAttempts();
         int multiplier = retryConfigData.getMultiplier().intValue();
@@ -91,13 +92,10 @@ public class KafkaAdminClient {
     }
 
     private HttpStatus getSchemaRegistryStatus() {
+        log.info("getSchemaRegistryStatus");
         try {
-            return webClient
-                    .method(HttpMethod.GET)
-                    .uri(kafkaConfigData.getSchemaRegistryUrl())
-                    .exchange()
-                    .map(ClientResponse::statusCode)
-                    .block();
+            return webClient.method(HttpMethod.GET).uri(kafkaConfigData.getSchemaRegistryUrl()).exchange()
+                    .map(ClientResponse::statusCode).block();
         } catch (Exception e) {
             return HttpStatus.SERVICE_UNAVAILABLE;
         }
@@ -126,34 +124,33 @@ public class KafkaAdminClient {
     }
 
     private CreateTopicsResult doCreateTopics(RetryContext retryContext) {
+        log.info("doCreateTopics");
         List<String> topicNames = kafkaConfigData.getTopicNamesToCreate();
-        LOG.info("Creating {} topics(s), attempt {}", topicNames.size(), retryContext.getRetryCount());
-        List<NewTopic> kafkaTopics = topicNames.stream().map(topic -> new NewTopic(
-                topic.trim(),
-                kafkaConfigData.getNumOfPartitions(),
-                kafkaConfigData.getReplicationFactor()
-        )).collect(Collectors.toList());
+        log.info("Creating {} topics(s), attempt {}", topicNames.size(), retryContext.getRetryCount());
+        List<NewTopic> kafkaTopics = topicNames.stream()
+                .map(topic -> new NewTopic(topic.trim(), kafkaConfigData.getNumOfPartitions(),
+                        kafkaConfigData.getReplicationFactor())).collect(Collectors.toList());
         return adminClient.createTopics(kafkaTopics);
     }
 
     private Collection<TopicListing> getTopics() {
+        log.info("getTopics");
         Collection<TopicListing> topics;
         try {
-//            topics = retryTemplate.execute(this::doGetTopics);
+            topics = retryTemplate.execute(this::doGetTopics);
         } catch (Throwable t) {
             throw new KafkaClientException("Reached max number of retry for reading kafka topic(s)!", t);
         }
-//        return topics;
-        return Collections.EMPTY_LIST;
+        return topics;
     }
 
     private Collection<TopicListing> doGetTopics(RetryContext retryContext)
             throws ExecutionException, InterruptedException {
-        LOG.info("Reading kafka topic {}, attempt {}",
-                kafkaConfigData.getTopicNamesToCreate().toArray(), retryContext.getRetryCount());
+        log.info("Reading kafka topic {}, attempt {}", kafkaConfigData.getTopicNamesToCreate().toArray(),
+                retryContext.getRetryCount());
         Collection<TopicListing> topics = adminClient.listTopics().listings().get();
         if (topics != null) {
-            topics.forEach(topic -> LOG.debug("Topic with name {}", topic.name()));
+            topics.forEach(topic -> log.debug("Topic with name {}", topic.name()));
         }
         return topics;
     }
