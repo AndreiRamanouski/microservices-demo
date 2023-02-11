@@ -8,3 +8,4 @@
         {"name": "createdAt", "type": ["null", "long"], "logicalType": ["null", "date"]}
     ]
 }
+//mvn install to create model

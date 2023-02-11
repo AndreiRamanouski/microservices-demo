@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.annotation.EnableRetry;
 
 import java.util.Map;
+import org.springframework.retry.support.RetryTemplate;
+import org.springframework.web.client.RestTemplate;
 
 @EnableRetry
 @Configuration
@@ -23,5 +25,13 @@ public class KafkaAdminConfig {
     public AdminClient adminClient() {
         return AdminClient.create(Map.of(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG,
                 kafkaConfigData.getBootstrapServers()));
+    }
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+    @Bean
+    public RetryTemplate retryTemplate(){
+        return new RetryTemplate();
     }
 }
