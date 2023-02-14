@@ -5,9 +5,11 @@ import com.microservices.demo.config.UserConfigData;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
+@EnableEurekaClient
 @EnableConfigurationProperties({UserConfigData.class})
 @ComponentScan(basePackages = "com.microservices.demo")
 public class ElasticQueryServiceApplication {

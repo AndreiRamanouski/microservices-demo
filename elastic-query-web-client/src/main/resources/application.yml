@@ -13,12 +13,12 @@ elastic-query-web-client:
     accept-type: 'application/vnd.api.v1+json'
 #    base-url: 'http://localhost:8183/elastic-query-service/documents/v1'
     base-url: 'http://elastic-query-service/elastic-query-service/documents/v1'
-    service-id: elastic-query-service
-    instances:
-      -
-        id: elastic-query-service-1
-        host: localhost
-        port: 8183
+#    service-id: elastic-query-service
+#    instances:
+#      -
+#        id: elastic-query-service-1
+#        host: localhost
+#        port: 8183
 #      -
 #        id: elastic-query-service-2
 #        host: localhost
@@ -29,6 +29,10 @@ elastic-query-web-client:
     uri: "/get-document-by-text"
     accept: ${elastic-query-web-client.webclient.accept-type}
 spring:
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
   thymeleaf:
     cache: false
   security:
