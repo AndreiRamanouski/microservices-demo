@@ -70,4 +70,17 @@ retry-config:
   sleep-time-ms: 2000
 
 security:
-  paths-to-ignore: ff
+  paths-to-ignore: /api-docs, /actuator/**
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health, prometheus
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      cache:
+        time-to-live: 1ms
