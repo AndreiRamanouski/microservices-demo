@@ -1,0 +1,499 @@
+{
+	"info": {
+		"_postman_id": "e55e434f-7363-46bc-b3a9-6aca794e2d3c",
+		"name": "elastic",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19809253"
+	},
+	"item": [
+		{
+			"name": "localhost:9200/twitter-index",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mappings\": {\n        \"properties\": {\n            \"userId\": {\n                \"type\": \"long\"\n            },\n            \"id\": {\n                \"type\": \"text\",\n                \"fields\": {\n                    \"keyword\": {\n                        \"type\": \"keyword\",\n                        \"ignore_above\": 256\n                    }\n                }\n            },\n            \"createdAt\": {\n                \"type\": \"date\",\n                \"format\": \"yyyy-MM-dd'T'HH:mm:ssZZ\"\n            },\n            \"text\": {\n                \"type\": \"text\",\n                \"fields\": {\n                    \"keyword\": {\n                        \"type\": \"keyword\",\n                        \"ignore_above\": 256\n                    }\n                }\n            }\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9200/twitter-index",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"twitter-index"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:9200/twitter-index/_doc/1",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\":\"1\",\n    \"id\" : \"1\",\n    \"createdAt\":\"2020-01-01T23:00:50+0000\",\n    \"text\":\"test elastic\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9200/twitter-index/_doc/1",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"twitter-index",
+						"_doc",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:9200/twitter-index/_search?q=id:3742735529375002280",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9200/twitter-index/_search?q=id:3742735529375002280",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"twitter-index",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "id:3742735529375002280"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8183/elastic-query-service/documents/v1/7027767952011865478",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ2Q1IxSWppNmFxSWZqRUVndHlURjBidE11YWRuY3VRLXpLeTU0QmZrR0JNIn0.eyJleHAiOjE2NzU5NDA0NjEsImlhdCI6MTY3NTk0MDE2MSwianRpIjoiY2FiZGExYWUtZjZmNS00MmNiLWJkZDAtYmM0NTM0ZmIyNzYzIiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMTAwLjEyOjgwODAvYXV0aC9yZWFsbXMvbWljcm9zZXJ2aWNlc19yZWFsbSIsImF1ZCI6WyJlbGFzdGljLXF1ZXJ5LXNlcnZpY2UiLCJhY2NvdW50Il0sInN1YiI6IjhlOGM1ZjIyLTNhMWEtNGUyMS05YjY3LTVkMTVkOGMzZTg4MSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImVsYXN0aWMtcXVlcnktd2ViLWNsaWVudCIsInNlc3Npb25fc3RhdGUiOiIwNjAyMWY4MS04ODI1LTQ1MTQtOTJkOS00Yzk3MWYwN2MwMmIiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHA6Ly8xOTIuMTY4LjEwMC4yNTo4MTg0Il0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJhcHBfdXNlcl9yb2xlIiwib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoiYXBwX3VzZXJfcm9sZSBlbWFpbCBwcm9maWxlIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJuYW1lIjoiU3RhbmRhcmQgVXNlciIsImdyb3VwcyI6WyJhcHBfdXNlcl9ncm91cCJdLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhcHBfdXNlciIsImdpdmVuX25hbWUiOiJTdGFuZGFyZCIsImZhbWlseV9uYW1lIjoiVXNlciJ9.SuOd8BRQ7aQGRu-mEFENRNEHoMOGypaGMhq4tRxe01Sq_414THcRyBvDnkbQskPQ0jlA_xUzeHrmpLe2i2-J6-wnmrLXsK1Ka12sUAySqte7U6Wyswmtoc9o-nCKe6Q0CnkP7I6LsiKKNZyZwcOhP_Rk04mFhfhXo-2G-5UJJVLTb3NP4wLdAPQZ9Vt1wZXdU90_jqAJDrB6jfTfXkgi8BuigdRwq7uyHnvK3OAenm3xa9BZvQoXtPnoYdmbd7YbLgmqLvEbptxFdJLhEv2r_QQcz467yVokgaadTmxnJMynAC1wly1ht_G6R46bbG1qoqEiQeQ9Uafd5X8v2yDWYA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8183/elastic-query-service/documents/v1/7027767952011865478",
+					"host": [
+						"localhost"
+					],
+					"port": "8183",
+					"path": [
+						"elastic-query-service",
+						"documents",
+						"v1",
+						"7027767952011865478"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8183/elastic-query-service/documents/v1",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ2Q1IxSWppNmFxSWZqRUVndHlURjBidE11YWRuY3VRLXpLeTU0QmZrR0JNIn0.eyJleHAiOjE2NzU5MjE2NzUsImlhdCI6MTY3NTkyMTM3NSwianRpIjoiNTFlMDAyZGQtYzI1YS00OTE4LThhNDMtOWRkYjA0YTg3NzI2IiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMTAwLjEyOjgwODAvYXV0aC9yZWFsbXMvbWljcm9zZXJ2aWNlc19yZWFsbSIsImF1ZCI6WyJlbGFzdGljLXF1ZXJ5LXNlcnZpY2UiLCJhY2NvdW50Il0sInN1YiI6IjhlOGM1ZjIyLTNhMWEtNGUyMS05YjY3LTVkMTVkOGMzZTg4MSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImVsYXN0aWMtcXVlcnktd2ViLWNsaWVudCIsInNlc3Npb25fc3RhdGUiOiI2ZGZhZmRmYS04OTBjLTRmYTktYmE1Yi0yYmYxZGMxZTA0OGMiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHA6Ly8xOTIuMTY4LjEwMC4yNTo4MTg0Il0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJhcHBfdXNlcl9yb2xlIiwib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoiYXBwX3VzZXJfcm9sZSBlbWFpbCBwcm9maWxlIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJuYW1lIjoiU3RhbmRhcmQgVXNlciIsImdyb3VwcyI6WyJhcHBfdXNlcl9ncm91cCJdLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhcHBfdXNlciIsImdpdmVuX25hbWUiOiJTdGFuZGFyZCIsImZhbWlseV9uYW1lIjoiVXNlciJ9.YGyT_rOQg9hmXBPC5gcOqjOhcaYG7WKTQHYN1-nD-tdmE0s4ErOGKdFFxalxv3qU3ffGcqnR7zZ_zEyE5KeL3jT9UxRQ96lpCZqfVGOAPFrtpOWhXt0AuH3t5v8dP2Id6hk32P6-SoRGB9bL2tAkJyElhQuaSW5o_xmm116_ZwULur3BFwFHKSMWBj2t3W1oKcjri21wbMV6ijK6UYewmgdylYajt61fKHb686PJ8gmdWqdlnTrX7mnnkSwS16cKan_RGCV87Z7ELgSdcafv4jgCcSCHzp0CM0NGncFXyPq1aJv3_RBHdXzynR-8hA8aSg1QEmIZd0nRBKtYjAtlSw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8183/elastic-query-service/documents/v1",
+					"host": [
+						"localhost"
+					],
+					"port": "8183",
+					"path": [
+						"elastic-query-service",
+						"documents",
+						"v1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8183/elastic-query-service/documents/v1/get-document-by-text",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ2Q1IxSWppNmFxSWZqRUVndHlURjBidE11YWRuY3VRLXpLeTU0QmZrR0JNIn0.eyJleHAiOjE2NzYxMTI0NjQsImlhdCI6MTY3NjExMjE2NCwianRpIjoiNmIxZjNiYzgtYTFiYy00MTA2LTkxZWYtMzc5ZGU4ZTQyOWY5IiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMTAwLjEyOjgwODAvYXV0aC9yZWFsbXMvbWljcm9zZXJ2aWNlc19yZWFsbSIsImF1ZCI6WyJlbGFzdGljLXF1ZXJ5LXNlcnZpY2UiLCJhY2NvdW50Il0sInN1YiI6IjhiNWI4NDQ5LWIxZDQtNDQxMi04YzI2LTc3NjI2Mzk4Njc1YiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImVsYXN0aWMtcXVlcnktd2ViLWNsaWVudCIsInNlc3Npb25fc3RhdGUiOiIyZTA0MzhjNi0wMjgyLTRkYzgtYjhkZS1hOThhN2Q1ZGZjOTkiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHA6Ly8xOTIuMTY4LjEwMC4yNTo4MTg0Il0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJhcHBfc3VwZXJfdXNlcl9yb2xlIiwib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoiYXBwX3N1cGVyX3VzZXJfcm9sZSBlbWFpbCBwcm9maWxlIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJuYW1lIjoiU3VwZXIgVXNlciIsImdyb3VwcyI6WyJhcHBfc3VwZXJfdXNlcl9ncm91cCJdLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhcHBfc3VwZXJfdXNlciIsImdpdmVuX25hbWUiOiJTdXBlciIsImZhbWlseV9uYW1lIjoiVXNlciJ9.SwfnIXgIt-CywylL9GjaVDeBJr3ge7bzsq6J3J2c0MQT6m2jeEIPhakBJ4mnS7PUbIaOsuKZ1wblP8R3vD5-aIy9puZZ_mnjul5L3uNcQenTVaBSR_HH1LLl9yxHaVDbooGdETdQ0W68XJBJb4AbYDiaZtI9vFknhYIOLB-tqk7SnN4OSxm1yat5ZVeeqALrXBJ7i22AJL2-hN3uYx91SFelLGOgIDYqplX1sF-IQofvViwEtpKihsOx1mNPTsjSuC9-tFrL7D_rLFx69eODoddGgSdAlCQW4FHtU5gOfUvoSBPkx7IMTm9vem_XOqC6ea8txDxoj2Un1gBrKMs0WA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\":\"funny\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8183/elastic-query-service/documents/v1/get-document-by-text",
+					"host": [
+						"localhost"
+					],
+					"port": "8183",
+					"path": [
+						"elastic-query-service",
+						"documents",
+						"v1",
+						"get-document-by-text"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8183/elastic-query-service/documents/3247013292699852790",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8183/elastic-query-service/documents/3247013292699852790",
+					"host": [
+						"localhost"
+					],
+					"port": "8183",
+					"path": [
+						"elastic-query-service",
+						"documents",
+						"3247013292699852790"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8184/elastic-query-web-client",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8184/elastic-query-web-client",
+					"host": [
+						"localhost"
+					],
+					"port": "8184",
+					"path": [
+						"elastic-query-web-client"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8183/elastic-query-service/api-docs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8183/elastic-query-service/api-docs",
+					"host": [
+						"localhost"
+					],
+					"port": "8183",
+					"path": [
+						"elastic-query-service",
+						"api-docs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8183/reactive-elastic-query-service/documents/get-doc-by-text",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\":\"thongs\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8183/reactive-elastic-query-service/documents/get-doc-by-text",
+					"host": [
+						"localhost"
+					],
+					"port": "8183",
+					"path": [
+						"reactive-elastic-query-service",
+						"documents",
+						"get-doc-by-text"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://192.168.100.12:8080/auth/realms/microservices_realm/.well-known/openid-configuration",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.100.12:8080/auth/realms/microservices_realm/.well-known/openid-configuration",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"100",
+						"12"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"realms",
+						"microservices_realm",
+						".well-known",
+						"openid-configuration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8187/kafka-streams-service/get-word-count-by-word/thongs",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ2Q1IxSWppNmFxSWZqRUVndHlURjBidE11YWRuY3VRLXpLeTU0QmZrR0JNIn0.eyJleHAiOjE2NzYxMDc3NjAsImlhdCI6MTY3NjEwNzQ2MCwianRpIjoiNDdkODhjYTUtNDZlOC00MGRkLThkMmYtNzAwN2QxNzdjYzQyIiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMTAwLjEyOjgwODAvYXV0aC9yZWFsbXMvbWljcm9zZXJ2aWNlc19yZWFsbSIsImF1ZCI6WyJlbGFzdGljLXF1ZXJ5LXNlcnZpY2UiLCJhY2NvdW50Il0sInN1YiI6IjhlOGM1ZjIyLTNhMWEtNGUyMS05YjY3LTVkMTVkOGMzZTg4MSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImVsYXN0aWMtcXVlcnktd2ViLWNsaWVudCIsInNlc3Npb25fc3RhdGUiOiI0ZGNkZTRiMC0wNTc2LTRkN2ItYTBiMi00MjM5YTg1ZjgwOGQiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHA6Ly8xOTIuMTY4LjEwMC4yNTo4MTg0Il0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJhcHBfdXNlcl9yb2xlIiwib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoiYXBwX3VzZXJfcm9sZSBlbWFpbCBwcm9maWxlIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJuYW1lIjoiU3RhbmRhcmQgVXNlciIsImdyb3VwcyI6WyJhcHBfdXNlcl9ncm91cCJdLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhcHBfdXNlciIsImdpdmVuX25hbWUiOiJTdGFuZGFyZCIsImZhbWlseV9uYW1lIjoiVXNlciJ9.CxOJFpQzFUFVDn25v3lWbs1RWcQ_8QqJsWwWprdlVw7uIl8IzuTCZXWbZNurCXp7inlI33dsZBm9sDbNvDo-S2vJVs8uAWW8_n-PlmSlM3Zd-cNQDxbybj6XkZobFGGUqpK5oPY7nYU0p5MguvB8578k3E1aytLsRRUT1MpTohU50sTsG-SI1Ma7u89UaAtobm-_cOCO-cJnCSX6pCL0-8puGsc5v7izH66EOa3q976Rs-MOl-XMdDs7irD2QPz4Sm_SNOGaEq3VDnwImF7oEnl-W66_utqk1EVflA3u1Sw6-bvadYqPUA2osNp4PeHmJmv2tgLc-7G3qbCl8COw_w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8187/kafka-streams-service/get-word-count-by-word/thongs",
+					"host": [
+						"localhost"
+					],
+					"port": "8187",
+					"path": [
+						"kafka-streams-service",
+						"get-word-count-by-word",
+						"thongs"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "localhost:8187/kafka-streams-service/get-word-count-by-word/thongs",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8187/kafka-streams-service/get-word-count-by-word/thongs",
+							"host": [
+								"localhost"
+							],
+							"port": "8187",
+							"path": [
+								"kafka-streams-service",
+								"get-word-count-by-word",
+								"thongs"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Feb 2023 15:23:55 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"word\": \"thongs\",\n    \"wordCount\": 0\n}"
+				}
+			]
+		},
+		{
+			"name": "localhost:8188/analytics-service/get-word-count-by-word/thongs",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8188/analytics-service/get-word-count-by-word/thongs",
+					"host": [
+						"localhost"
+					],
+					"port": "8188",
+					"path": [
+						"analytics-service",
+						"get-word-count-by-word",
+						"thongs"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "localhost:8188/analytics-service/get-word-count-by-word/thongs",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8188/analytics-service/get-word-count-by-word/thongs",
+							"host": [
+								"localhost"
+							],
+							"port": "8188",
+							"path": [
+								"analytics-service",
+								"get-word-count-by-word",
+								"thongs"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/vnd.api.v1+json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 13 Feb 2023 10:32:22 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"0f22fce0-df23-43f5-a44d-54d62e19ad89\",\n    \"word\": \"thongs\",\n    \"wordCount\": 204\n}"
+				}
+			]
+		}
+	]
+}
