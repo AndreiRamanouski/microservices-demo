@@ -61,7 +61,7 @@ spring:
 security:
 #  todo check
 #  does not work
-  paths-to-ignore: /elastic-query-service/documents/v1
+  paths-to-ignore: /api-docs, /actuator/**
 
 server:
   port: 8183
@@ -85,3 +85,16 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.htm
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health, prometheus
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      cache:
+        time-to-live: 1ms

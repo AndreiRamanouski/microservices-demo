@@ -1,0 +1,34 @@
+version: '3.7'
+services:
+  grafana:
+    image: grafana/grafana:${GRAFANA_VERSION:-latest}
+    hostname: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - ${GLOBAL_NETWORK:-grafana}
+
+
+#http://localhost:9090/targets
+  prometheus:
+    image: prom/prometheus:${PROMETHEUS_VERSION:-latest}
+    hostname: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus:/prometheus
+    networks:
+      - ${GLOBAL_NETWORK:-prometheus}
+
+
+# jvm_memory_used_bytes{job="elastic-query-service-1", area="heap"}
+# http_server_requests_seconds_count{job="elastic-query-service-1", uri="/documents/v1/get-document-by-text"}
+# http_server_requests_seconds_max{job="elastic-query-service-1", uri="/documents/v1/get-document-by-text"}
+# http_server_requests_seconds_sum{job="elastic-query-service-1", uri="/documents/v1"} / http_server_requests_seconds_count{job="elastic-query-service-1", uri="/documents/v1"}
+# logback_events_total{job="elastic-query-service-1", level="info"}

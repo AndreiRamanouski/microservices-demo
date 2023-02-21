@@ -9,6 +9,8 @@ import com.microservices.demo.elastic.index.client.service.ElasticIndexClient;
 import com.microservices.demo.kafka.avro.model.TwitterAvroModel;
 import com.microservices.demo.transformer.AvroToElasticModelTransformer;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -46,16 +48,16 @@ public class TwitterKafkaConsumer implements KafkaConsumer<Long, TwitterAvroMode
         this.elasticIndexClient = elasticIndexClient;
     }
 
-//    @EventListener
-//    public void onAppStarted(ApplicationStartedEvent event) {
-//        kafkaAdminClient.checkTopicsCreated();
-//        log.info("Topics with name {} is ready for operations!", kafkaConfigData.getTopicNamesToCreate().toArray());
-//        kafkaListenerEndpointRegistry.getListenerContainer(kafkaConsumerConfigData.getConsumerGroupId())
-//                .start();
-//    }
+    @EventListener
+    public void onAppStarted(ApplicationStartedEvent event) {
+        kafkaAdminClient.checkTopicsCreated();
+        log.info("Topics with name {} is ready for operations!", kafkaConfigData.getTopicNamesToCreate().toArray());
+        kafkaListenerEndpointRegistry.getListenerContainer(kafkaConsumerConfigData.getConsumerGroupId())
+                .start();
+    }
 
     @Override
-    @KafkaListener(id = "${kafka-consumer-config.consumer-group-id}", topics = "${kafka-config.topic-name}")
+    @KafkaListener(id = "${kafka-consumer-config.consumer-group-id}", topics = "${kafka-config.topic-name}", autoStartup = "false")
     public void receive(@Payload List<TwitterAvroModel> messages,
             @Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) List<Integer> keys,
             @Header(KafkaHeaders.RECEIVED_PARTITION_ID) List<Integer> partitions,
