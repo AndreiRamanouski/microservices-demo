@@ -27,7 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final OAuth2ResourceServerProperties oAuth2ResourceServerProperties;
 
     public WebSecurityConfig(TwitterQueryUserDetailsService userDetailsService,
-                             OAuth2ResourceServerProperties resourceServerProperties) {
+            OAuth2ResourceServerProperties resourceServerProperties) {
         this.twitterQueryUserDetailsService = userDetailsService;
         this.oAuth2ResourceServerProperties = resourceServerProperties;
     }
@@ -44,6 +44,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .authorizeRequests()
+                .antMatchers("/actuator/**")
+                .permitAll()
                 .anyRequest()
                 .fullyAuthenticated()
                 .and()
@@ -53,8 +55,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    JwtDecoder jwtDecoder(@Qualifier("elastic-query-service-audience-validator")
-                                  OAuth2TokenValidator<Jwt> audienceValidator) {
+    JwtDecoder jwtDecoder(
+            @Qualifier("elastic-query-service-audience-validator") OAuth2TokenValidator<Jwt> audienceValidator
+    ) {
         NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromOidcIssuerLocation(
                 oAuth2ResourceServerProperties.getJwt().getIssuerUri());
         OAuth2TokenValidator<Jwt> withIssuer =

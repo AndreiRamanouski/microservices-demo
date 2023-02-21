@@ -63,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     JwtDecoder jwtDecoder(@Qualifier("analytics-service-audience-validator")
-                                  OAuth2TokenValidator<Jwt> audienceValidator) {
+    OAuth2TokenValidator<Jwt> audienceValidator) {
         NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromOidcIssuerLocation(
                 oAuth2ResourceServerProperties.getJwt().getIssuerUri());
         OAuth2TokenValidator<Jwt> withIssuer =
