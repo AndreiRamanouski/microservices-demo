@@ -10,3 +10,7 @@ spring:
 #          uri: /Users/andreiromanovskiy/IdeaProjects/microservices-demo-two/config-server-repository
 
       name: twitter-to-kafka-service,config-client
+
+
+log:
+  app-name: twitter-to-kafka-service

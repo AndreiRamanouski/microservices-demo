@@ -2,7 +2,7 @@
 
 <configuration>
     <property name="DEV_HOME" value="./config-server/logs"/>
-    <property name="APP_HOME" value="config-server"/>
+    <property name="APP_HOME" value="${log.app-name}"/>
 
     <include resource="logback-common.xml"/>
 
