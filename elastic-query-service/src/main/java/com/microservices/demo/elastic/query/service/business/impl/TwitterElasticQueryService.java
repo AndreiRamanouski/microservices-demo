@@ -1,5 +1,8 @@
 package com.microservices.demo.elastic.query.service.business.impl;
 
+import static com.microservices.demo.mdc.Constants.CORRELATION_ID_HEADER;
+import static com.microservices.demo.mdc.Constants.CORRELATION_ID_KEY;
+
 import com.microservices.demo.config.ElasticQueryServiceConfigData;
 import com.microservices.demo.elastic.model.impl.TwitterIndexModel;
 import com.microservices.demo.elastic.query.common.model.ElasticQueryServiceResponseModel;
@@ -9,9 +12,11 @@ import com.microservices.demo.elastic.query.service.business.ElasticQueryService
 import com.microservices.demo.elastic.query.service.model.ElasticQueryServiceAnalyticsResponseModel;
 import com.microservices.demo.elastic.query.service.model.ElasticQueryServiceWordCountResponseModel;
 import com.microservices.demo.elastic.query.service.model.assembler.ElasticQueryServiceResponseModelAssembler;
+import com.microservices.demo.mdc.Constants;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.ElasticsearchCorruptionException;
+import org.slf4j.MDC;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -71,7 +76,14 @@ public class TwitterElasticQueryService implements ElasticQueryService {
             return webclientBuilder.build()
                     .method(HttpMethod.GET)
                     .uri(query.getUri(), uriBuilder -> uriBuilder.build(text))
-                    .headers(h -> h.setBearerAuth(accessToken))
+
+
+                    .headers(h -> {
+                        h.setBearerAuth(accessToken);
+                        h.set(CORRELATION_ID_HEADER, MDC.get(CORRELATION_ID_KEY));
+                    })
+
+
                     .accept(MediaType.valueOf(query.getAccept()))
                     .retrieve()
                     .onStatus(s -> s.equals(HttpStatus.UNAUTHORIZED),

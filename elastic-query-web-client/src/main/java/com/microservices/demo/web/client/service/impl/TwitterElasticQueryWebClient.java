@@ -1,13 +1,17 @@
 package com.microservices.demo.web.client.service.impl;
 
+import static com.microservices.demo.mdc.Constants.CORRELATION_ID_HEADER;
+
 import com.microservices.demo.config.ElasticQueryWebClientConfigData;
 import com.microservices.demo.elastic.query.web.client.common.exception.ElasticQueryWebClientException;
 import com.microservices.demo.elastic.query.web.client.common.model.ElasticQueryServiceAnalyticsResponseModel;
 import com.microservices.demo.elastic.query.web.client.common.model.ElasticQueryWebClientRequestModel;
 import com.microservices.demo.elastic.query.web.client.common.model.ElasticQueryWebClientResponseModel;
+import com.microservices.demo.mdc.Constants;
 import com.microservices.demo.web.client.service.ElasticWebClientInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -46,12 +50,14 @@ public class TwitterElasticQueryWebClient implements ElasticWebClientInterface {
                 .block();
     }
 
+
     private WebClient.ResponseSpec getWebClient(ElasticQueryWebClientRequestModel requestModel) {
         return webClientBuilder
                 .build()
                 .method(HttpMethod.valueOf(elasticQueryWebClientConfigData.getQueryByText().getMethod()))
                 .uri(elasticQueryWebClientConfigData.getQueryByText().getUri())
                 .accept(MediaType.valueOf(elasticQueryWebClientConfigData.getQueryByText().getAccept()))
+                .header(CORRELATION_ID_HEADER, MDC.get(CORRELATION_ID_HEADER))
                 .body(BodyInserters.fromPublisher(Mono.just(requestModel), createParameterizedTypeReference()))
                 .retrieve()
                 .onStatus(

@@ -15,7 +15,7 @@ elastic-query-service:
     query-type: "KAFKA_STATE_STORE"
   query-from-kafka-state-store:
     method: GET
-    uri: 'http://kafka-streams-service:8187/kafka-streams-service/get-word-count-by-word/{word}'
+    uri: 'http://localhost:8187/kafka-streams-service/get-word-count-by-word/{word}'
     accept: ${elastic-query-service.webclient.accept-type}
 
 spring:
