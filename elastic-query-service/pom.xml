@@ -28,6 +28,10 @@
         </dependency>
         <dependency>
             <groupId>com.microservices.demo</groupId>
+            <artifactId>mcd-interceptor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.microservices.demo</groupId>
             <artifactId>elastic-query-client</artifactId>
         </dependency>
         <dependency>
