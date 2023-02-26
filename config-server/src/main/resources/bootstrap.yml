@@ -21,3 +21,6 @@ spring:
           uri: /Users/andreiromanovskiy/IdeaProjects/microservices-demo-two/config-server-repository
           clone-on-start: true
     fail-fast: true
+
+log:
+  app-name: config-service
